@@ -1,0 +1,280 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f5f5f5;
+    padding: 20px;
+}
+
+/* Container */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 40px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+header {
+    text-align: center;
+    border-bottom: 3px solid #2c3e50;
+    padding-bottom: 20px;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 1.2em;
+    color: #7f8c8d;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.contact-info {
+    margin-top: 15px;
+}
+
+.contact-info p {
+    display: inline-block;
+    margin: 0 15px;
+    font-size: 0.95em;
+}
+
+.contact-info a {
+    color: #3498db;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.contact-info a:hover {
+    color: #2980b9;
+    text-decoration: underline;
+}
+
+/* CV Sections */
+.cv-section {
+    margin-bottom: 40px;
+}
+
+.cv-section h2 {
+    font-size: 1.8em;
+    color: #2c3e50;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 8px;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Entry Styles */
+.entry {
+    margin-bottom: 25px;
+}
+
+.entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+}
+
+.entry-header h3 {
+    font-size: 1.2em;
+    color: #34495e;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.date {
+    font-size: 0.95em;
+    color: #7f8c8d;
+    font-style: italic;
+    white-space: nowrap;
+}
+
+.institution {
+    font-size: 1.05em;
+    color: #555;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.details {
+    color: #666;
+    margin-bottom: 8px;
+}
+
+/* Lists */
+.entry ul {
+    margin-left: 20px;
+    margin-top: 10px;
+}
+
+.entry ul li {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.awards-list, .service-list, .languages-list {
+    list-style: none;
+    margin-left: 0;
+}
+
+.awards-list li, .service-list li, .languages-list li {
+    margin-bottom: 12px;
+    padding-left: 20px;
+    position: relative;
+    color: #555;
+}
+
+.awards-list li:before, .service-list li:before, .languages-list li:before {
+    content: "▪";
+    position: absolute;
+    left: 0;
+    color: #3498db;
+    font-size: 1.2em;
+}
+
+/* Publications */
+.publication {
+    margin-bottom: 20px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.publication:before {
+    content: "▪";
+    position: absolute;
+    left: 0;
+    color: #3498db;
+    font-size: 1.2em;
+}
+
+.publication p {
+    line-height: 1.7;
+    color: #555;
+}
+
+.publication strong {
+    color: #2c3e50;
+}
+
+.publication em {
+    color: #7f8c8d;
+}
+
+/* Skills Section */
+.skills {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.skill-category {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #3498db;
+}
+
+.skill-category h3 {
+    font-size: 1.1em;
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.skill-category p {
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid #ecf0f1;
+    color: #7f8c8d;
+    font-size: 0.9em;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+    }
+
+    .container {
+        padding: 20px;
+    }
+
+    header h1 {
+        font-size: 2em;
+    }
+
+    .subtitle {
+        font-size: 1em;
+    }
+
+    .contact-info p {
+        display: block;
+        margin: 5px 0;
+    }
+
+    .cv-section h2 {
+        font-size: 1.5em;
+    }
+
+    .entry-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .entry-header h3 {
+        font-size: 1.1em;
+    }
+
+    .date {
+        margin-top: 5px;
+    }
+
+    .skills {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media print {
+    body {
+        background-color: white;
+        padding: 0;
+    }
+
+    .container {
+        box-shadow: none;
+        padding: 20px;
+    }
+
+    .contact-info a {
+        color: #000;
+        text-decoration: none;
+    }
+
+    .cv-section {
+        page-break-inside: avoid;
+    }
+}
