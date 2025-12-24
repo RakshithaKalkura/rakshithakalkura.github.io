@@ -1,2 +1,2 @@
 # rakshithakalkura.github.io
-Academic portfplio
+Academic portfolio
