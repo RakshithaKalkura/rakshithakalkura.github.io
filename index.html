@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="no-js">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Rakshitha Kalkura | Academic Portfolio</title>
   <meta name="description" content="Rakshitha Kalkura — MS (CS) student at IIT Madras working on robustness and efficiency of Spiking Neural Networks.">
   <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.className = "js";</script>
 </head>
-<body>
+<body class="view-terminal">
+  <nav class="menubar">
+    <span class="brand">raksh@iitm <span class="d">~</span></span>
+    <div class="menu">
+      <button type="button" data-view="terminal" class="active">Terminal</button>
+      <button type="button" data-view="simple">Simple view</button>
+      <button type="button" id="help-btn">Help</button>
+    </div>
+  </nav>
+
   <!-- Draggable ASCII cats live here -->
   <div id="cat-layer" aria-hidden="true"></div>
 
@@ -26,21 +36,95 @@
     </div>
   </main>
 
-  <p class="hint">drag &amp; throw the cats · click to boop · type <code>play</code></p>
+  <!-- Simple (detailed) portfolio view — also what visitors without JavaScript see -->
+  <div class="simple" id="simple">
+    <article>
+      <header class="s-head">
+        <h1>Rakshitha Kalkura</h1>
+        <p class="s-tag">MS (Computer Science), Indian Institute of Technology Madras</p>
+        <p class="s-links">
+          <a href="mailto:rakshithakalkura837@gmail.com">Email</a> ·
+          <a href="https://www.blogger.com/profile/13762794379781336873" target="_blank" rel="noopener">Blog</a> ·
+          <a href="https://github.com/RakshithaKalkura" target="_blank" rel="noopener">GitHub</a> ·
+          <a href="https://linkedin.com/in/rakshitha-k" target="_blank" rel="noopener">LinkedIn</a>
+        </p>
+      </header>
 
-  <noscript>
-    <section class="fallback">
-      <h1>Rakshitha Kalkura</h1>
-      <p>MS (Computer Science), IIT Madras — Spiking Neural Networks &amp; Efficient Deep Learning.</p>
-      <p>Research: GLARA, a parameter-space attack on quantized SNNs (under review, ECCV 2026).</p>
-      <p>
-        <a href="https://www.blogger.com/profile/13762794379781336873">Blog</a> |
-        <a href="https://github.com/RakshithaKalkura">GitHub</a> |
-        <a href="https://linkedin.com/in/rakshitha-k">LinkedIn</a> |
-        <a href="mailto:rakshithakalkura837@gmail.com">Email</a>
-      </p>
-    </section>
-  </noscript>
+      <section>
+        <h2>About</h2>
+        <p>
+          I am an MS student in Computer Science at IIT Madras, working with
+          Prof. Gopalakrishnan Srinivasan. My research focuses on the robustness and efficiency of
+          Spiking Neural Networks (SNNs) — adversarial attacks on quantized models, pruning, and
+          quantization.
+        </p>
+      </section>
+
+      <section>
+        <h2>Publications</h2>
+        <div class="item">
+          <h3>GLARA: A Parameter-Space Attack on Quantized Spiking Neural Networks</h3>
+          <p class="meta">Under review — European Conference on Computer Vision (ECCV) 2026</p>
+          <p>A novel parameter-space (bit-flip) attack on quantized SNNs, achieving up to
+            <strong>22× fewer bit flips</strong> than prior attacks on ImageNet-scale models.</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Research Experience</h2>
+        <div class="item">
+          <h3>Indian Institute of Technology Madras <span class="when">May 2025 – Present</span></h3>
+          <p class="meta">Research Intern · Supervisor: Prof. Gopalakrishnan Srinivasan</p>
+          <ul>
+            <li>Developed <strong>GLARA</strong>, a parameter-space attack on quantized SNNs — up to 22× fewer bit flips than prior attacks on ImageNet-scale models.</li>
+            <li>Ran large-scale robustness experiments on ResNet/VGG-based SNNs across CIFAR-10, CIFAR-100, DVS-CIFAR10 and ImageNet using PyTorch and quantization-aware training.</li>
+            <li>Implemented pruning and quantization algorithms for SNNs.</li>
+          </ul>
+        </div>
+        <div class="item">
+          <h3>Indian Institute of Technology Jodhpur <span class="when">Feb 2025 – Apr 2025</span></h3>
+          <p class="meta">Research Intern · Supervisor: Dr. Debasis Das</p>
+          <ul>
+            <li>Implemented and validated a non-autoregressive multi-horizon flight trajectory prediction framework using Gray Code representation.</li>
+            <li>Built DNN, GNN and autoencoder models for engine fault detection and classification (accuracy 0.88).</li>
+          </ul>
+        </div>
+        <div class="item">
+          <h3>National Institute of Technology Calicut <span class="when">May 2024 – Jul 2024</span></h3>
+          <p class="meta">Research Intern · Supervisor: Dr. M Prabhu</p>
+          <ul>
+            <li>Developed a dynamic traffic signal controller with 89.6% accuracy in vehicle detection and density estimation using YOLOv8.</li>
+            <li>Built a Deep Q-Network for signal scheduling that reduced total vehicle waiting time by 30%.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>Education</h2>
+        <div class="item">
+          <h3>MS, Computer Science <span class="when">Ongoing</span></h3>
+          <p class="meta">Indian Institute of Technology Madras</p>
+        </div>
+        <div class="item">
+          <h3>B.Tech, Computer Science and Engineering</h3>
+          <p class="meta">National Institute of Technology Goa · CGPA 9.65/10 · Department Rank 1</p>
+          <p>Final year as an exchange student at IIT Madras (CGPA 9.5/10).</p>
+        </div>
+      </section>
+
+      <section>
+        <h2>Contact</h2>
+        <p>
+          Email: <a href="mailto:rakshithakalkura837@gmail.com">rakshithakalkura837@gmail.com</a><br>
+          Blog: <a href="https://www.blogger.com/profile/13762794379781336873" target="_blank" rel="noopener">blogger.com/profile/13762794379781336873</a><br>
+          GitHub: <a href="https://github.com/RakshithaKalkura" target="_blank" rel="noopener">github.com/RakshithaKalkura</a><br>
+          LinkedIn: <a href="https://linkedin.com/in/rakshitha-k" target="_blank" rel="noopener">linkedin.com/in/rakshitha-k</a>
+        </p>
+      </section>
+
+      <footer class="s-foot">© 2026 Rakshitha Kalkura</footer>
+    </article>
+  </div>
 
   <script src="script.js"></script>
 </body>

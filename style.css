@@ -1,4 +1,5 @@
 :root {
+  color-scheme: dark;
   --bg: #0d1117;
   --win: rgba(22, 27, 34, 0.92);
   --bar: #21262d;
@@ -166,21 +167,89 @@ html, body {
 .terminal a { color: var(--cyan); }
 .terminal a:hover { color: var(--pink); }
 
-.hint {
+/* ---------- menu bar ---------- */
+.menubar {
   position: fixed;
-  z-index: 2;
-  top: 8px;
+  z-index: 6;
+  top: 0;
   left: 0;
   right: 0;
-  margin: 0;
-  text-align: center;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  background: rgba(13, 17, 23, .85);
+  border-bottom: 1px solid #21262d;
+  backdrop-filter: blur(6px);
+  font-size: 13px;
+}
+.brand { color: var(--cyan); white-space: nowrap; }
+.menu { display: flex; gap: 6px; }
+.menu button {
+  font: inherit;
   font-size: 12px;
   color: var(--dim);
-  pointer-events: none;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
 }
-.hint code { color: var(--pink); }
+.menu button:hover { color: var(--fg); border-color: #30363d; }
+.menu button.active { color: var(--green); border-color: #2ea04366; background: #2ea0431a; }
+.menu button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
 
-.fallback { position: relative; z-index: 3; padding: 24px; max-width: 700px; margin: auto; }
+/* ---------- views ---------- */
+.window { margin-top: 20px; }
+.view-simple .window,
+.view-simple #cat-layer,
+.view-simple .laser { display: none !important; }
+.js .view-terminal .simple { display: none; }
+.no-js .window, .no-js .menu { display: none; }
+.no-js body { overflow: auto; }
+
+/* ---------- simple (detailed) portfolio ---------- */
+.simple {
+  position: fixed;
+  inset: 40px 0 0 0;
+  overflow-y: auto;
+  padding: 32px 16px 48px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.6;
+}
+.no-js .simple { position: static; }
+.simple article { max-width: 760px; margin: 0 auto; }
+.s-head { border-bottom: 1px solid #21262d; padding-bottom: 20px; margin-bottom: 8px; }
+.simple h1 { margin: 0; font-size: 2.2rem; color: #f0f6fc; }
+.s-tag { margin: 4px 0 10px; color: var(--dim); }
+.s-links a, .simple a { color: var(--cyan); text-decoration: none; }
+.simple a:hover { text-decoration: underline; }
+.simple h2 {
+  margin: 32px 0 12px;
+  font-family: var(--mono);
+  font-size: 1rem;
+  color: var(--pink);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.simple h3 {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #f0f6fc;
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.when { font-weight: normal; font-size: .9rem; color: var(--dim); }
+.item { margin-bottom: 20px; }
+.meta { margin: 2px 0 6px; color: var(--dim); font-size: .95rem; }
+.simple p { margin: 0 0 8px; }
+.simple ul { margin: 6px 0 0; padding-left: 20px; }
+.simple li { margin-bottom: 4px; }
+.simple strong { color: var(--yellow); font-weight: 600; }
+.s-foot { margin-top: 40px; text-align: center; color: var(--dim); font-size: .85rem; }
 
 /* scrollbar */
 .terminal::-webkit-scrollbar { width: 8px; }
@@ -191,4 +260,8 @@ html, body {
   .cat pre { font-size: 10px; }
   .banner { font-size: 9px; line-height: 1.2; display: inline-block; }
   .title { font-size: 11px; }
+  .menubar { padding: 0 10px; }
+  .brand { display: none; }
+  .menu { width: 100%; justify-content: center; }
+  .simple h1 { font-size: 1.7rem; }
 }

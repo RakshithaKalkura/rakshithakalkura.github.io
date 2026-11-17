@@ -17,57 +17,14 @@ const escapeHtml = (s) =>
 
 /* ---------------- content ---------------- */
 
+// one-liners for the terminal — the full details live in the simple view (type `gui`)
+const MORE = ' <span class="d">· details:</span> <span class="g">gui</span>';
 const CONTENT = {
-  about: `<span class="k b">Rakshitha Kalkura</span>
-<span class="d">MS (Computer Science) @ IIT Madras</span>
-
-I work on the <span class="g">robustness and efficiency of Spiking Neural Networks</span>
-with Prof. Gopalakrishnan Srinivasan at IIT Madras — adversarial attacks
-on quantized models, pruning, and quantization for SNNs.
-
-Try <span class="c">research</span>, <span class="c">publications</span> or <span class="c">contact</span>.`,
-
-  research: `<span class="y b">## Research Experience</span>
-
-<span class="g">▸ IIT Madras</span> — Research Intern            <span class="d">May 2025 – Present</span>
-  <span class="d">Supervisor: Prof. Gopalakrishnan Srinivasan</span>
-  • Developed <span class="k b">GLARA</span>, a parameter-space attack on quantized SNNs —
-    up to <span class="y">22× fewer bit flips</span> than prior attacks on ImageNet-scale models.
-  • Large-scale robustness experiments on ResNet/VGG SNNs across
-    CIFAR-10, CIFAR-100, DVS-CIFAR10 and ImageNet.
-  • Pruning and quantization algorithms for SNNs.
-
-<span class="g">▸ IIT Jodhpur</span> — Research Intern            <span class="d">Feb 2025 – Apr 2025</span>
-  <span class="d">Supervisor: Dr. Debasis Das</span>
-  • Non-autoregressive multi-horizon flight trajectory prediction
-    using Gray Code representation.
-  • DNN / GNN / autoencoder models for engine fault detection.
-
-<span class="g">▸ NIT Calicut</span> — Research Intern            <span class="d">May 2024 – Jul 2024</span>
-  <span class="d">Supervisor: Dr. M Prabhu</span>
-  • Dynamic traffic signal controller: YOLOv8 vehicle-density estimation
-    + Deep Q-Network scheduling → <span class="y">30% less waiting time</span>.`,
-
-  publications: `<span class="y b">## Publications</span>
-
-[1] <span class="k b">GLARA: A Parameter-Space Attack on Quantized Spiking Neural Networks</span>
-    <span class="d">Under review — European Conference on Computer Vision (ECCV) 2026</span>`,
-
-  education: `<span class="y b">## Education</span>
-
-<span class="g">▸ MS, Computer Science</span>
-  Indian Institute of Technology Madras                 <span class="d">ongoing</span>
-
-<span class="g">▸ B.Tech, Computer Science & Engineering</span>
-  National Institute of Technology Goa       CGPA <span class="y">9.65/10</span>
-  <span class="d">Department Rank 1 · final year as exchange student at IIT Madras (9.5/10)</span>`,
-
-  contact: `<span class="y b">## Contact</span>
-
-  email     ${a("mailto:" + LINKS.email, LINKS.email)}
-  blog      ${a(LINKS.blog, "blogger.com/profile/13762794379781336873")}
-  github    ${a(LINKS.github, "github.com/RakshithaKalkura")}
-  linkedin  ${a(LINKS.linkedin, "linkedin.com/in/rakshitha-k")}`,
+  about: `<span class="k b">Rakshitha Kalkura</span> — MS (CS) @ IIT Madras, researching robust &amp; efficient <span class="g">Spiking Neural Networks</span>.`,
+  research: `<span class="g">IIT Madras</span> (GLARA, SNN attacks) · <span class="g">IIT Jodhpur</span> (flight trajectories) · <span class="g">NIT Calicut</span> (RL traffic signals)` + MORE,
+  publications: `<span class="k b">GLARA</span>: parameter-space attack on quantized SNNs, <span class="y">22× fewer bit flips</span> — under review, ECCV 2026` + MORE,
+  education: `MS CS @ <span class="g">IIT Madras</span> (ongoing) · B.Tech CSE @ <span class="g">NIT Goa</span>, <span class="y">9.65</span> CGPA, Dept. Rank 1`,
+  contact: `${a("mailto:" + LINKS.email, LINKS.email)} · ${a(LINKS.blog, "blog")} · ${a(LINKS.github, "github")} · ${a(LINKS.linkedin, "linkedin")}`,
 };
 
 const FILES = {
@@ -90,18 +47,21 @@ const WELCOME = `<span class="k banner">${escapeHtml(BANNER)}</span>
 Welcome! I'm <span class="k b">Rakshitha Kalkura</span>, MS (CS) student at IIT Madras
 working on Spiking Neural Networks.
 
-Type <span class="g b">help</span> to see available commands.
+Type <span class="g b">help</span> for commands, <span class="g b">gui</span> for a simple portfolio view.
+<span class="d">psst: drag &amp; throw the cats, click to boop, or type </span><span class="g">play</span>
 `;
 
 /* ---------------- commands ---------------- */
 
 const HELP = [
+  ["hello", "say hi"],
   ["about", "who I am"],
   ["research", "research experience"],
   ["publications", "papers"],
   ["education", "degrees"],
   ["contact", "how to reach me"],
   ["blog / github / linkedin", "open a link"],
+  ["gui", "switch to the simple (detailed) portfolio"],
   ["ls, cat <file>", "browse files"],
   ["neofetch", "system info, but me"],
   ["play", "how to play with the cats"],
@@ -123,6 +83,12 @@ const COMMANDS = {
     "<span class=\"y b\">Available commands</span>\n\n" +
     HELP.map(([c, d]) => `  <span class="g">${c.padEnd(26)}</span><span class="d">${d}</span>`).join("\n") +
     "\n\n<span class=\"d\">Tip: Tab autocompletes, ↑/↓ browse history.</span>",
+  hello: () => `👋 hello there! I'm <span class="k b">Rakshitha</span> — try <span class="g">about</span>, <span class="g">research</span> or <span class="g">gui</span>.`,
+  hi: () => COMMANDS.hello(),
+  hey: () => COMMANDS.hello(),
+  gui: () => { setTimeout(() => setView("simple"), 250); return "opening simple view…"; },
+  simple: () => COMMANDS.gui(),
+  portfolio: () => COMMANDS.gui(),
   about: () => CONTENT.about,
   whoami: () => CONTENT.about,
   research: () => CONTENT.research,
@@ -814,8 +780,34 @@ function initialCats() {
   requestAnimationFrame(tick);
 }
 
+/* ---------------- views: terminal <-> simple ---------------- */
+
+function setView(view) {
+  document.body.className = "view-" + view;
+  document.querySelectorAll(".menu [data-view]").forEach((b) =>
+    b.classList.toggle("active", b.dataset.view === view));
+  if (view === "simple") {
+    if (laser.on) toggleLaser();
+    window.history.replaceState(null, "", "#portfolio");
+    document.getElementById("simple").scrollTop = 0;
+  } else {
+    window.history.replaceState(null, "", location.pathname + location.search);
+    input.focus();
+  }
+}
+
+document.querySelectorAll(".menu [data-view]").forEach((b) =>
+  b.addEventListener("click", () => setView(b.dataset.view)));
+
+document.getElementById("help-btn").addEventListener("click", () => {
+  setView("terminal");
+  run("help");
+  terminal.scrollTop = terminal.scrollHeight;
+});
+
 /* ---------------- boot ---------------- */
 
 initialCats();
 print(WELCOME);
-input.focus();
+if (location.hash === "#portfolio") setView("simple");
+else input.focus();
