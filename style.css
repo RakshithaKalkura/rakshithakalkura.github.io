@@ -28,23 +28,74 @@ html, body {
 #cat-layer {
   position: fixed;
   inset: 0;
+  pointer-events: none;   /* no z-index: lets airborne cats rise above the window */
+}
+.cat, .yarn {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: auto;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  will-change: transform;
   z-index: 1;
 }
-.cat {
-  position: absolute;
+.cat.front, .yarn.front { z-index: 3; }
+.cat pre {
   margin: 0;
   font-family: var(--mono);
   font-size: 13px;
   line-height: 1.15;
-  color: var(--cat);
-  cursor: grab;
-  user-select: none;
-  touch-action: none;
   white-space: pre;
-  transition: color .2s;
+  opacity: .85;
 }
-.cat:hover { color: var(--pink); }
-.cat.dragging { cursor: grabbing; color: var(--pink); z-index: 5; }
+.cat:hover pre { opacity: 1; filter: brightness(1.25); }
+.cat.dragging, .yarn.dragging { cursor: grabbing; z-index: 5; }
+.cat.dragging pre { opacity: 1; }
+
+.bubble {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translate(-50%, 4px) scale(.8);
+  margin-bottom: 4px;
+  padding: 1px 7px;
+  border-radius: 8px;
+  background: var(--bar);
+  border: 1px solid #30363d;
+  color: var(--fg);
+  font-size: 11px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s, transform .15s;
+}
+.bubble.show { opacity: 1; transform: translate(-50%, 0) scale(1); }
+
+.yarn {
+  font-family: var(--mono);
+  font-size: 22px;
+  font-weight: bold;
+  line-height: 1;
+  color: var(--pink);
+  transform-origin: 50% 50%;
+}
+
+.laser {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff3b3b;
+  box-shadow: 0 0 8px 3px rgba(255, 59, 59, .7);
+  pointer-events: none;
+  display: none;
+}
 
 /* ---------- terminal window ---------- */
 .window {
@@ -118,7 +169,7 @@ html, body {
 .hint {
   position: fixed;
   z-index: 2;
-  bottom: 8px;
+  top: 8px;
   left: 0;
   right: 0;
   margin: 0;
@@ -137,7 +188,7 @@ html, body {
 
 @media (max-width: 600px) {
   .terminal { font-size: 12.5px; padding: 10px; }
-  .cat { font-size: 10px; }
+  .cat pre { font-size: 10px; }
   .banner { font-size: 9px; line-height: 1.2; display: inline-block; }
   .title { font-size: 11px; }
 }
