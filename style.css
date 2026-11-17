@@ -51,6 +51,8 @@ html, body {
   line-height: 1.15;
   white-space: pre;
   opacity: .85;
+  transform-origin: 50% 100%;
+  will-change: transform;
 }
 .cat:hover pre { opacity: 1; filter: brightness(1.25); }
 .cat.dragging, .yarn.dragging { cursor: grabbing; z-index: 5; }
@@ -186,7 +188,7 @@ html, body {
 }
 .brand { color: var(--cyan); white-space: nowrap; }
 .menu { display: flex; gap: 6px; }
-.menu button {
+.menu button, .menu a {
   font: inherit;
   font-size: 12px;
   color: var(--dim);
@@ -196,60 +198,12 @@ html, body {
   padding: 4px 10px;
   cursor: pointer;
 }
-.menu button:hover { color: var(--fg); border-color: #30363d; }
-.menu button.active { color: var(--green); border-color: #2ea04366; background: #2ea0431a; }
-.menu button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
+.menu a { text-decoration: none; }
+.menu button:hover, .menu a:hover { color: var(--fg); border-color: #30363d; }
+.menu .active { color: var(--green); border-color: #2ea04366; background: #2ea0431a; }
+.menu button:focus-visible, .menu a:focus-visible { outline: 2px solid var(--cyan); outline-offset: 1px; }
 
-/* ---------- views ---------- */
 .window { margin-top: 20px; }
-.view-simple .window,
-.view-simple #cat-layer,
-.view-simple .laser { display: none !important; }
-.js .view-terminal .simple { display: none; }
-.no-js .window, .no-js .menu { display: none; }
-.no-js body { overflow: auto; }
-
-/* ---------- simple (detailed) portfolio ---------- */
-.simple {
-  position: fixed;
-  inset: 40px 0 0 0;
-  overflow-y: auto;
-  padding: 32px 16px 48px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.6;
-}
-.no-js .simple { position: static; }
-.simple article { max-width: 760px; margin: 0 auto; }
-.s-head { border-bottom: 1px solid #21262d; padding-bottom: 20px; margin-bottom: 8px; }
-.simple h1 { margin: 0; font-size: 2.2rem; color: #f0f6fc; }
-.s-tag { margin: 4px 0 10px; color: var(--dim); }
-.s-links a, .simple a { color: var(--cyan); text-decoration: none; }
-.simple a:hover { text-decoration: underline; }
-.simple h2 {
-  margin: 32px 0 12px;
-  font-family: var(--mono);
-  font-size: 1rem;
-  color: var(--pink);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-.simple h3 {
-  margin: 0;
-  font-size: 1.05rem;
-  color: #f0f6fc;
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-.when { font-weight: normal; font-size: .9rem; color: var(--dim); }
-.item { margin-bottom: 20px; }
-.meta { margin: 2px 0 6px; color: var(--dim); font-size: .95rem; }
-.simple p { margin: 0 0 8px; }
-.simple ul { margin: 6px 0 0; padding-left: 20px; }
-.simple li { margin-bottom: 4px; }
-.simple strong { color: var(--yellow); font-weight: 600; }
-.s-foot { margin-top: 40px; text-align: center; color: var(--dim); font-size: .85rem; }
 
 /* scrollbar */
 .terminal::-webkit-scrollbar { width: 8px; }
@@ -263,5 +217,4 @@ html, body {
   .menubar { padding: 0 10px; }
   .brand { display: none; }
   .menu { width: 100%; justify-content: center; }
-  .simple h1 { font-size: 1.7rem; }
 }

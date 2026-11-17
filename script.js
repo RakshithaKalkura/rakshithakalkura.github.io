@@ -86,7 +86,7 @@ const COMMANDS = {
   hello: () => `👋 hello there! I'm <span class="k b">Rakshitha</span> — try <span class="g">about</span>, <span class="g">research</span> or <span class="g">gui</span>.`,
   hi: () => COMMANDS.hello(),
   hey: () => COMMANDS.hello(),
-  gui: () => { setTimeout(() => setView("simple"), 250); return "opening simple view…"; },
+  gui: () => { setTimeout(() => { location.href = "portfolio.html"; }, 300); return "opening simple view → portfolio.html"; },
   simple: () => COMMANDS.gui(),
   portfolio: () => COMMANDS.gui(),
   about: () => CONTENT.about,
@@ -361,6 +361,33 @@ String.raw`  /\_/\
   \| |/
    U U`];
 
+/* ----- sprite metrics (measured once, so animation never forces layout) ----- */
+
+const metrics = { cw: 8, lh: 15 };
+function measureFont() {
+  const probe = document.createElement("div");
+  probe.className = "cat";
+  probe.style.visibility = "hidden";
+  const pre = document.createElement("pre");
+  pre.textContent = "MMMMMMMMMMMMMMMMMMMM\nM\nM\nM\nM";
+  probe.appendChild(pre);
+  catLayer.appendChild(probe);
+  metrics.cw = pre.getBoundingClientRect().width / 20;
+  metrics.lh = pre.getBoundingClientRect().height / 5;
+  probe.remove();
+}
+const sizeCache = new Map();
+function spriteSize(text) {
+  let s = sizeCache.get(text);
+  if (!s) {
+    const lines = text.split("\n");
+    s = { cols: Math.max(...lines.map((l) => l.length)), rows: lines.length };
+    sizeCache.set(text, s);
+  }
+  return { w: s.cols * metrics.cw, h: s.rows * metrics.lh };
+}
+let clock = 0;   // seconds since start, for breathing etc.
+
 /* ----- world ----- */
 
 const cats = [];
@@ -473,6 +500,14 @@ class Cat {
     this.offset = rand(-45, 45);
     this.attention = rand(4, 10);          // personal spot so cats don't stack
     this.bored = 0; this.yarnT = 0;
+    // smooth-animation state
+    this.gvx = 0;                         // eased ground velocity
+    this.squash = 0; this.squashV = 0;    // squash & stretch spring
+    this.tilt = 0;                        // body rotation (deg)
+    this.dist = 0;                        // distance walked, drives leg frames + bob
+    this.zT = 0;                          // sleep animation clock
+    this.breathe = rand(0, 6);
+    this.prevX = x; this.dragVx = 0;
 
     bindPointer(this);
     this.el.addEventListener("pointerenter", () => this.pet(true));
@@ -491,7 +526,7 @@ class Cat {
   get grounded() { return this.on && !this.held && this.state !== "air"; }
 
   /* --- reactions to the visitor --- */
-  grab() { this.held = true; this.state = "held"; this.on = null; this.say(pick(["!!", "hey!", "mrrp?!", "put me down"])); }
+  grab() { this.held = true; this.state = "held"; this.on = null; this.gvx = 0; this.squash = -0.18; this.say(pick(["!!", "hey!", "mrrp?!", "put me down"])); }
   release(vx, vy) {
     this.held = false; this.state = "air"; this.vx = vx; this.vy = vy;
     if (Math.hypot(vx, vy) > 900) this.say(pick(["wheee!", "aaaa!", "yeet"]));
@@ -519,7 +554,7 @@ class Cat {
   hop(vy, vx = 0) {
     if (!this.grounded) return;
     this.jumpVy = -vy; this.jumpVx = vx;
-    this.setState("crouch", 0.12);
+    this.setState("crouch", 0.16);
   }
   nap() { if (this.grounded) { this.playmate = null; this.setState("sleep", rand(8, 14)); } }
 
@@ -527,7 +562,11 @@ class Cat {
   decide() {
     this.playmate = null;
     const r = Math.random();
-    if (REDUCED) return r < 0.6 ? this.setState("sit", rand(3, 7)) : this.setState("sleep", rand(6, 12));
+    if (REDUCED) {                       // calmer cats for reduced-motion users
+      if (r < 0.4) return this.setState("sit", rand(3, 7));
+      if (r < 0.75) { if (Math.random() < 0.5) this.dir *= -1; return this.setState("walk", rand(2, 5)); }
+      return this.setState("sleep", rand(6, 12));
+    }
     if (r < 0.26) this.setState("sit", rand(1.5, 4));
     else if (r < 0.52) { if (Math.random() < 0.5) this.dir *= -1; this.setState("walk", rand(2, 5)); }
     else if (r < 0.66) { if (Math.random() < 0.5) this.dir *= -1; this.setState("run", rand(1, 2.5)); }
@@ -592,13 +631,24 @@ class Cat {
   update(dt, S) {
     this.cool = Math.max(0, this.cool - dt);
     this.bored = Math.max(0, this.bored - dt);
-    if (this.held) { this.frameT += dt * 6; return; }
+    this.animate(dt);
+    if (this.held) {
+      this.frameT += dt * 6;
+      const v = dt > 0 ? (this.x - this.prevX) / dt : 0;
+      this.dragVx += (v - this.dragVx) * Math.min(1, dt * 12);
+      this.prevX = this.x;
+      return;
+    }
+    this.prevX = this.x;
 
     if (this.state === "air") {
       const hit = integrate(this, dt, S, 0.5);
       this.frameT += dt;
       if (hit) {
-        this.on = hit.on; this.vx = 0; this.vy = 0;
+        this.on = hit.on;
+        this.squash = clamp(hit.impact / 2600, 0.06, 0.35); this.squashV = 0;
+        this.gvx = clamp(this.vx, -260, 260) * 0.6;   // keep a little momentum → slide
+        this.vx = 0; this.vy = 0;
         if (hit.impact > 1100) this.say(pick(["oof", "mrow!", "nailed it", "10/10 landing"]));
         if (this.zoomLeft > 0) { this.setState("zoom", this.zoomLeft); this.zoomLeft = 0; }
         else this.setState("sit", rand(0.3, 1.2));
@@ -617,7 +667,10 @@ class Cat {
     if (t && t.kind === "laser" && this.state === "sleep") { this.say("!"); this.setState("sit", 0.2); }
 
     if (this.state === "crouch") {
-      if (this.timer <= 0) { this.on = null; this.vx = this.jumpVx; this.vy = this.jumpVy; this.state = "air"; }
+      if (this.timer <= 0) {
+        this.on = null; this.vx = this.jumpVx; this.vy = this.jumpVy; this.state = "air";
+        this.squash = -0.22; this.squashV = 0;      // stretch on take-off
+      }
     } else if (t && this.state !== "sleep") {
       this.chase(t);
       if (t.kind === "cat" && this.timer <= 0) this.decide();
@@ -640,10 +693,14 @@ class Cat {
 
     // locomotion
     const speed = { walk: 45, run: 175, zoom: 330, chase: this.chaseSpeed || 0 }[this.state] || 0;
-    this.x += speed * this.dir * dt;
+    const accel = this.state === "zoom" ? 9 : speed > 100 ? 6 : 4;
+    this.gvx += (speed * this.dir - this.gvx) * (1 - Math.exp(-dt * accel));
+    if (Math.abs(this.gvx) < 0.5 && !speed) this.gvx = 0;
+    this.x += this.gvx * dt;
+    this.dist += Math.abs(this.gvx) * dt;
     const half = this.w / 2;
-    if (this.x < half) { this.x = half; this.dir = 1; }
-    if (this.x > innerWidth - half) { this.x = innerWidth - half; this.dir = -1; }
+    if (this.x < half) { this.x = half; this.dir = 1; this.gvx = 0; }
+    if (this.x > innerWidth - half) { this.x = innerWidth - half; this.dir = -1; this.gvx = 0; }
     if (this.state === "zoom" && Math.random() < dt * 1.5) {
       const keep = this.timer;
       this.hop(rand(350, 600), this.dir * 300);
@@ -652,35 +709,55 @@ class Cat {
     }
 
     // animation clocks
-    this.frameT += dt * ({ walk: 5, run: 11, zoom: 16, chase: speed ? 12 : 0, sleep: 0.8 }[this.state] || 0);
+    if (this.state === "sleep") this.zT += dt * 0.8;
     if (this.blinkT > 0) this.blinkT -= dt;
     else if (Math.random() < dt * 0.35) this.blinkT = 0.15;
   }
 
+  // springs & easing that run every frame regardless of state
+  animate(dt) {
+    const target = this.state === "crouch" ? 0.22 : 0;
+    this.squashV += ((target - this.squash) * 300 - this.squashV * 15) * dt;
+    this.squash += this.squashV * dt;
+
+    let tiltTo = 0;
+    if (this.held) tiltTo = clamp(-this.dragVx * 0.035, -40, 40);          // pendulum swing
+    else if (this.state === "air") tiltTo = clamp(this.vy * 0.016, -22, 22) * (this.vx >= 0 ? 1 : -1);
+    this.tilt += (tiltTo - this.tilt) * (1 - Math.exp(-dt * (this.held ? 8 : 12)));
+  }
+
   spriteText() {
-    const f = Math.floor(this.frameT);
     const side = this.dir > 0 ? SIDE_R : SIDE_L;
+    const moving = Math.abs(this.gvx) > 12;
+    const fast = Math.abs(this.gvx) > 110;
+    const step = Math.floor(this.dist / (fast ? 26 : 13)) % 2;   // legs follow distance travelled
     switch (this.state) {
-      case "held": return HELD[f % 2];
+      case "held": return HELD[Math.floor(this.frameT) % 2];
       case "air": return side.jump[0];
       case "crouch": return side.crouch[0];
-      case "walk": return side.walk[f % 2];
-      case "run": case "zoom": return side.run[f % 2];
-      case "chase": return this.chaseSpeed ? side.run[f % 2] : SIT("o.o");
-      case "sleep": return this.petted ? SIT("^.^") : SLEEP[f % 2];
-      default: return SIT(this.petted ? "^.^" : this.blinkT > 0 ? "-.-" : "o.o");
+      case "sleep": return this.petted ? SIT("^.^") : SLEEP[Math.floor(this.zT) % 2];
     }
+    if (moving) return fast ? side.run[step] : side.walk[step];
+    return SIT(this.petted ? "^.^" : this.blinkT > 0 ? "-.-" : "o.o");
   }
 
   render() {
     const s = this.spriteText();
-    if (s !== this.sprite) {
-      this.sprite = s;
-      this.pre.textContent = s;
-      this.w = this.pre.offsetWidth;
-      this.h = this.pre.offsetHeight;
-    }
-    this.el.style.transform = `translate(${this.x - this.w / 2}px, ${this.y - this.h}px)`;
+    if (s !== this.sprite) { this.sprite = s; this.pre.textContent = s; }
+    const { w, h } = spriteSize(s);
+    this.w = w; this.h = h;
+
+    // walking bob + breathing, layered on top of the squash spring
+    let bob = 0, breath = 0;
+    if (this.grounded && Math.abs(this.gvx) > 12) {
+      bob = -Math.abs(Math.sin((this.dist / (Math.abs(this.gvx) > 110 ? 26 : 13)) * Math.PI)) * 2;
+    } else if (this.state === "sleep") breath = Math.sin(clock * 1.6 + this.breathe) * 0.035;
+    else if (this.grounded) breath = Math.sin(clock * 2.4 + this.breathe) * 0.018;
+
+    const sy = 1 - this.squash + breath;
+    const sx = 1 + this.squash * 0.55 - breath * 0.4;
+    this.el.style.transform = `translate3d(${this.x - w / 2}px, ${this.y - h + bob}px, 0)`;
+    this.pre.style.transform = `rotate(${this.tilt.toFixed(2)}deg) scale(${sx.toFixed(3)}, ${sy.toFixed(3)})`;
     const front = this.held || this.state === "air" || this.state === "crouch";
     if (front !== this.front) { this.front = front; this.el.classList.toggle("front", front); }
   }
@@ -726,8 +803,9 @@ class Yarn {
   }
   render() {
     this.el.style.transform =
-      `translate(${this.x - this.w / 2}px, ${this.y - this.h}px) rotate(${this.rot}rad)`;
-    this.el.classList.toggle("front", this.held || !this.on);
+      `translate3d(${this.x - this.w / 2}px, ${this.y - this.h}px, 0) rotate(${this.rot.toFixed(3)}rad)`;
+    const front = this.held || !this.on;
+    if (front !== this.front) { this.front = front; this.el.classList.toggle("front", front); }
   }
 }
 
@@ -767,6 +845,7 @@ let lastTick = performance.now();
 function tick(now) {
   const dt = clamp((now - lastTick) / 1000, 0, 0.05);
   lastTick = Math.max(lastTick, now);
+  clock += dt;
   const S = surfaces();
   for (const c of cats) { c.update(dt, S); c.render(); }
   for (const y of yarns) { y.update(dt, S); y.render(); }
@@ -774,40 +853,31 @@ function tick(now) {
 }
 
 function initialCats() {
+  measureFont();
+  matchMedia("(max-width: 600px)").addEventListener?.("change", () => { measureFont(); });
   const n = innerWidth < 700 ? 2 : 4;
   for (let i = 0; i < n; i++) setTimeout(() => spawnCat(), 300 + i * 700);
   if (innerWidth >= 700) setTimeout(spawnYarn, 3500);
   requestAnimationFrame(tick);
 }
 
-/* ---------------- views: terminal <-> simple ---------------- */
+/* ---------------- menu ---------------- */
 
-function setView(view) {
-  document.body.className = "view-" + view;
-  document.querySelectorAll(".menu [data-view]").forEach((b) =>
-    b.classList.toggle("active", b.dataset.view === view));
-  if (view === "simple") {
-    if (laser.on) toggleLaser();
-    window.history.replaceState(null, "", "#portfolio");
-    document.getElementById("simple").scrollTop = 0;
-  } else {
-    window.history.replaceState(null, "", location.pathname + location.search);
-    input.focus();
-  }
-}
-
-document.querySelectorAll(".menu [data-view]").forEach((b) =>
-  b.addEventListener("click", () => setView(b.dataset.view)));
-
-document.getElementById("help-btn").addEventListener("click", () => {
-  setView("terminal");
+function showHelp() {
   run("help");
   terminal.scrollTop = terminal.scrollHeight;
-});
+  input.focus();
+}
+document.getElementById("help-btn").addEventListener("click", showHelp);
 
 /* ---------------- boot ---------------- */
 
+if (location.hash === "#portfolio") location.replace("portfolio.html");   // old links
 initialCats();
 print(WELCOME);
-if (location.hash === "#portfolio") setView("simple");
-else input.focus();
+if (location.hash === "#help") {
+  window.history.replaceState(null, "", location.pathname + location.search);
+  showHelp();
+} else {
+  input.focus();
+}
