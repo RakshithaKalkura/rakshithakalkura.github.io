@@ -8,85 +8,40 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Rakshitha Kalkura</h1>
-    <p>MS (Computer Science), IIT Madras | Spiking Neural Networks &amp; Efficient Deep Learning</p>
-    <nav>
-      <a href="#about">About</a> |
-      <a href="#research">Research</a> |
-      <a href="#education">Education</a> |
-      <a href="#contact">Contact</a> |
-      <a href="https://www.blogger.com/profile/13762794379781336873" target="_blank" rel="noopener">Blog</a>
-    </nav>
-  </header>
+  <!-- Draggable ASCII cats live here -->
+  <div id="cat-layer" aria-hidden="true"></div>
 
-  <section id="about">
-    <h2>About Me</h2>
-    <p>
-      I am an MS student in Computer Science at the Indian Institute of Technology Madras,
-      working with Prof. Gopalakrishnan Srinivasan. My research focuses on the robustness and
-      efficiency of Spiking Neural Networks (SNNs), including adversarial attacks on quantized
-      models, pruning, and quantization.
-    </p>
-  </section>
+  <main class="window" id="window">
+    <div class="titlebar">
+      <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+      <span class="title">raksh@iitm: ~ — zsh</span>
+    </div>
+    <div class="terminal" id="terminal">
+      <div id="output" aria-live="polite"></div>
+      <div class="input-line" id="input-line">
+        <span class="prompt" id="prompt"></span>
+        <input id="cmd" type="text" autocomplete="off" autocapitalize="off"
+               autocorrect="off" spellcheck="false" aria-label="Terminal command">
+      </div>
+    </div>
+  </main>
 
-  <section id="research">
-    <h2>Research</h2>
+  <p class="hint">psst — drag the cats around. type <code>meow</code> for more.</p>
 
-    <h3>Publications</h3>
-    <ul>
-      <li>
-        <strong>GLARA: A Parameter-Space Attack on Quantized Spiking Neural Networks</strong><br>
-        Under review at the European Conference on Computer Vision (ECCV) 2026.
-        Achieves up to 22&times; fewer bit flips than prior attacks on ImageNet-scale models.
-      </li>
-    </ul>
+  <noscript>
+    <section class="fallback">
+      <h1>Rakshitha Kalkura</h1>
+      <p>MS (Computer Science), IIT Madras — Spiking Neural Networks &amp; Efficient Deep Learning.</p>
+      <p>Research: GLARA, a parameter-space attack on quantized SNNs (under review, ECCV 2026).</p>
+      <p>
+        <a href="https://www.blogger.com/profile/13762794379781336873">Blog</a> |
+        <a href="https://github.com/RakshithaKalkura">GitHub</a> |
+        <a href="https://linkedin.com/in/rakshitha-k">LinkedIn</a> |
+        <a href="mailto:rakshithakalkura837@gmail.com">Email</a>
+      </p>
+    </section>
+  </noscript>
 
-    <h3>Research Experience</h3>
-    <ul>
-      <li>
-        <strong>Indian Institute of Technology Madras</strong> — Research Intern, May 2025 – Present<br>
-        <em>Supervisor: Prof. Gopalakrishnan Srinivasan</em><br>
-        Developed GLARA, a novel parameter-space attack on quantized SNNs. Ran large-scale robustness
-        experiments on ResNet/VGG-based SNNs across CIFAR-10, CIFAR-100, DVS-CIFAR10 and ImageNet.
-        Also worked on pruning and quantization algorithms for SNNs.
-      </li>
-      <li>
-        <strong>Indian Institute of Technology Jodhpur</strong> — Research Intern, Feb 2025 – Apr 2025<br>
-        <em>Supervisor: Dr. Debasis Das</em><br>
-        Implemented a non-autoregressive multi-horizon flight trajectory prediction framework using
-        Gray Code representation, and DNN/GNN/autoencoder models for engine fault detection.
-      </li>
-      <li>
-        <strong>National Institute of Technology Calicut</strong> — Research Intern, May 2024 – Jul 2024<br>
-        <em>Supervisor: Dr. M Prabhu</em><br>
-        Built a dynamic traffic signal controller using YOLOv8 for vehicle density estimation and a
-        Deep Q-Network for signal scheduling, reducing total vehicle waiting time by 30%.
-      </li>
-    </ul>
-  </section>
-
-  <section id="education">
-    <h2>Education</h2>
-    <ul>
-      <li><strong>MS, Computer Science</strong> — Indian Institute of Technology Madras (ongoing)</li>
-      <li><strong>B.Tech, Computer Science and Engineering</strong> — National Institute of Technology Goa, CGPA 9.65/10 (Department Rank 1)<br>
-        Final year as an exchange student at IIT Madras (CGPA 9.5/10)</li>
-    </ul>
-  </section>
-
-  <section id="contact">
-    <h2>Contact &amp; Links</h2>
-    <p>Email: <a href="mailto:rakshithakalkura837@gmail.com">rakshithakalkura837@gmail.com</a></p>
-    <p>
-      <a href="https://www.blogger.com/profile/13762794379781336873" target="_blank" rel="noopener">Blog</a> |
-      <a href="https://github.com/RakshithaKalkura">GitHub</a> |
-      <a href="https://linkedin.com/in/rakshitha-k">LinkedIn</a>
-    </p>
-  </section>
-
-  <footer>
-    <p>&copy; 2026 Rakshitha Kalkura</p>
-  </footer>
+  <script src="script.js"></script>
 </body>
 </html>
