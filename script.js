@@ -175,7 +175,7 @@ function neofetch() {
   /     \
  (_______)`.split("\n");
   const info = [
-    `<span class="k b">raksh</span>@<span class="k b">iitm</span>`,
+    `<span class="k b">raksh</span>@<span class="k b">raksh</span>`,
     "<span class=\"d\">-----------</span>",
     "<span class=\"c\">OS</span>:       MS (CS) @ IIT Madras",
     "<span class=\"c\">Kernel</span>:   Spiking Neural Networks",
